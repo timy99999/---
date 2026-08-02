@@ -9,8 +9,9 @@
   function initHover() {
     document.querySelectorAll('[data-hover]').forEach(el => {
       const decls = parseDecls(el.getAttribute('data-hover'));
-      const original = decls.map(([prop]) => [prop, el.style.getPropertyValue(prop)]);
+      let original = [];
       el.addEventListener('mouseenter', () => {
+        original = decls.map(([prop]) => [prop, el.style.getPropertyValue(prop)]);
         decls.forEach(([prop, value]) => el.style.setProperty(prop, value));
       });
       el.addEventListener('mouseleave', () => {
