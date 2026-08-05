@@ -20,6 +20,42 @@
     });
   }
 
+  function initDecorFly() {
+    const anims = ['floatA', 'floatB', 'floatC', 'floatD', 'floatE'];
+    document.querySelectorAll('.bg-decor, .hero-decor').forEach(container => {
+      Array.from(container.children).forEach(orig => {
+        const clone = orig.cloneNode(true);
+        clone.style.left = (Math.random() * 90 + 3).toFixed(1) + '%';
+        clone.style.top = (Math.random() * 82 + 5).toFixed(1) + '%';
+        clone.style.right = '';
+        clone.style.bottom = '';
+        clone.style.opacity = '.55';
+        const anim = anims[Math.floor(Math.random() * anims.length)];
+        const duration = (7 + Math.random() * 7).toFixed(1) + 's';
+        const delay = (-Math.random() * 10).toFixed(1) + 's';
+        clone.style.animation = `${anim} ${duration} ease-in-out ${delay} infinite`;
+        container.appendChild(clone);
+      });
+    });
+  }
+
+  function initSectionNav() {
+    const links = Array.from(document.querySelectorAll('.nav-links a'));
+    const map = new Map();
+    links.forEach(a => {
+      const section = document.getElementById(a.getAttribute('href').slice(1));
+      if (section) map.set(section, a);
+    });
+    const setActive = (a, active) => { a.style.color = active ? '#fff' : 'rgba(255,255,255,.6)'; };
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const a = map.get(entry.target);
+        if (a) setActive(a, entry.isIntersecting);
+      });
+    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    map.forEach((a, section) => io.observe(section));
+  }
+
   function initReveal() {
     const show = el => { el.style.opacity = '1'; el.style.transform = 'none'; };
     const io = new IntersectionObserver(entries => {
@@ -41,5 +77,7 @@
   document.addEventListener('DOMContentLoaded', () => {
     initHover();
     initReveal();
+    initDecorFly();
+    initSectionNav();
   });
 })();
